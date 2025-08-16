@@ -9,16 +9,16 @@ using Newtonsoft.Json.Linq;
 
 namespace DocumentProcessingSystem.Functions.Triggers;
 
-public class CosmosDbTrigger
+public class RawContractsCosmosDbTrigger
 {
-    private readonly ILogger<CosmosDbTrigger> _logger;
+    private readonly ILogger<RawContractsCosmosDbTrigger> _logger;
     private readonly IContractTemplateService _contractTemplateService;
     private readonly ICosmosDocumentService _cosmosDocumentService;
     private readonly CosmosDbSettings _cosmosDbSettings;
 
 
-    public CosmosDbTrigger(
-        ILogger<CosmosDbTrigger> logger,
+    public RawContractsCosmosDbTrigger(
+        ILogger<RawContractsCosmosDbTrigger> logger,
         IContractTemplateService contractTemplateService,
         ICosmosDocumentService cosmosDocumentService,
         IOptions<CosmosDbSettings> cosmosSettings)
@@ -29,11 +29,11 @@ public class CosmosDbTrigger
         _cosmosDbSettings = cosmosSettings.Value;
     }
 
-    [Function("ContractCosmosDbTrigger")]
+    [Function("RawContractCosmosDbTrigger")]
     public async Task Run([CosmosDBTrigger(
-        databaseName: "%DataBaseName%",
-        containerName: "%RawContractDocumentsContainer%",
-        Connection = "CosmosDBConnection",
+        databaseName: "%CosmosDb:DatabaseName%",
+        containerName: "%CosmosDb:RawContractContainerName%",
+        Connection = "CosmosDb:ConnectionString",
         LeaseContainerName = "leases",
         CreateLeaseContainerIfNotExists = true)] IReadOnlyList<RawContractDocument> documents)
     {
