@@ -9,7 +9,9 @@ namespace DocumentProcessingSystem.Domain.Entities
 {
     public class DocumentWrapper<T>
     {
+        [JsonProperty("id")]
         public string Id { get; set; }
+
         [JsonProperty("partitionKey")]
         public string PartitionKey { get; set; }
 

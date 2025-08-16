@@ -1,4 +1,4 @@
-﻿using DocumentProcessingSystem.Infrastructure.TemplateEngine.Interface;
+﻿using DocumentProcessingSystem.Infrastructure.TemplateEngine.Interfaces;
 using DotLiquid;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -27,7 +27,7 @@ namespace DocumentProcessingSystem.Infrastructure.TemplateEngine.Implementation
                     {
                         source = streamReader.ReadToEnd();
                     }
-                    
+
                     if (!string.IsNullOrWhiteSpace(source))
                     {
                         parser = Template.Parse(source);
@@ -41,8 +41,8 @@ namespace DocumentProcessingSystem.Infrastructure.TemplateEngine.Implementation
                 });
                 if (parser != null)
                 {
-                    var ret = parser.Render(hash);
-                    return ret;
+                    var parsedPayload = parser.Render(hash);
+                    return parsedPayload;
                 }
                 else
                 {

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotLiquid" Version="2.2.692" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.52.1" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.53.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.8" />
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\DocumentProcessingSystem.Domain\DocumentProcessingSystem.Domain.csproj" />
+    <ProjectReference Include="..\DocumentProcessingSystem.Domain\DocumentProcessingSystem.Domain.csproj" />
   </ItemGroup>
 
 </Project>

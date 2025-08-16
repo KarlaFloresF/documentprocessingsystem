@@ -1,12 +1,11 @@
 using DocumentProcessingSystem.Application.Interfaces;
-using DocumentProcessingSystem.Application.Services;
+using DocumentProcessingSystem.Domain.Configurations;
 using DocumentProcessingSystem.Domain.Entities;
-using DocumentProcessingSystem.Infrastructure.CosmosDbEngine.Interface;
+using DocumentProcessingSystem.Infrastructure.CosmosDbEngine.Interfaces;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 
 namespace DocumentProcessingSystem.Functions.Triggers;
 
@@ -15,15 +14,19 @@ public class CosmosDbTrigger
     private readonly ILogger<CosmosDbTrigger> _logger;
     private readonly IContractTemplateService _contractTemplateService;
     private readonly ICosmosDocumentService _cosmosDocumentService;
+    private readonly CosmosDbSettings _cosmosDbSettings;
+
 
     public CosmosDbTrigger(
         ILogger<CosmosDbTrigger> logger,
         IContractTemplateService contractTemplateService,
-        ICosmosDocumentService cosmosDocumentService)
+        ICosmosDocumentService cosmosDocumentService,
+        IOptions<CosmosDbSettings> cosmosSettings)
     {
         _logger = logger;
         _contractTemplateService = contractTemplateService;
         _cosmosDocumentService = cosmosDocumentService;
+        _cosmosDbSettings = cosmosSettings.Value;
     }
 
     [Function("ContractCosmosDbTrigger")]
@@ -32,46 +35,44 @@ public class CosmosDbTrigger
         containerName: "%RawContractDocumentsContainer%",
         Connection = "CosmosDBConnection",
         LeaseContainerName = "leases",
-        CreateLeaseContainerIfNotExists = true)] IReadOnlyList<RawContractDocument> input)
+        CreateLeaseContainerIfNotExists = true)] IReadOnlyList<RawContractDocument> documents)
     {
-        if (input != null && input.Count > 0)
+        if (documents != null && documents.Count > 0)
         {
-            foreach (var contract in input)
+            foreach (var doc in documents)
             {
                 try
                 {
-                    var transformedContractDoc = await _contractTemplateService.GenerateContractAsync(contract);
+                    var transformedContractDoc = await _contractTemplateService.TransformDocumentFromLiquidTemplateAsync(doc);
 
                     if (!string.IsNullOrWhiteSpace(transformedContractDoc))
                     {
-                        _logger.LogInformation("Contract generated successfully for: " + contract.ClientName);
-                        // Aquí podrías guardar el resultado en otro contenedor, blob, etc.
-                        //quiero cambiar 
-                        var options = new JsonSerializerOptions
+                        _logger.LogInformation("Contract generated successfully for: " + doc.ClientName);
+
+                        var document = JObject.Parse(transformedContractDoc) ?? throw new NotImplementedException($"Error converting payload {transformedContractDoc} to JObject.");
+                        var partitionKey = document["partitionKey"];
+                        var contentJson = document["content"];
+
+                        var contract = new GenericTypeDocument()
                         {
-                            PropertyNameCaseInsensitive = true
+                            Id = Guid.NewGuid().ToString(),
+                            PartitionKey = partitionKey.ToString(),
+                            Content = contentJson
                         };
 
-                        var wrapper = JsonSerializer.Deserialize<DocumentWrapper<ContractDocument>>(transformedContractDoc, options);
-                        if (wrapper?.Content?.Entity != null)
-                        {
-                            wrapper.Content.Entity.DocumentStatus = "Persisted";
-                        }
-                        //var persistedContractDoc = JsonSerializer.Serialize(wrapper);
-                        await _cosmosDocumentService.SaveAsync(wrapper);
-                        //SAVE INTO COSMOSDB
+                        //TODO: Validate if exists
+                        await _cosmosDocumentService.SaveAsync(contract, contract.PartitionKey, _cosmosDbSettings.ContractContainerName);
                     }
                     else
                     {
-                        _logger.LogWarning("Contract generation failed for: " + contract.ClientName);
+                        _logger.LogWarning("Building document failed for: " + doc.Id);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error generating contract for: " + contract.ClientName);
+                    _logger.LogError(ex, "Error generating document for: " + doc.Id);
                 }
             }
-
         }
     }
 }

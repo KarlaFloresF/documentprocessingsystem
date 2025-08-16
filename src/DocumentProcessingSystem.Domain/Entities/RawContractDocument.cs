@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,12 @@ namespace DocumentProcessingSystem.Domain.Entities
 {
     public class RawContractDocument
     {
+        [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("partitionKey")]
         public string PartitionKey { get; set; }
+
         public string DocumentType { get; set; }
         public string ClientId { get; set; }
         public string ClientName { get; set; }
@@ -20,6 +24,5 @@ namespace DocumentProcessingSystem.Domain.Entities
         public decimal MonthlyRate { get; set; }
         public string Currency { get; set; }
         public string Status { get; set; }
-
     }
 }

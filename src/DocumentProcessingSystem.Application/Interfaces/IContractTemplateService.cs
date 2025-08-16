@@ -4,6 +4,6 @@ namespace DocumentProcessingSystem.Application.Interfaces
 {
     public interface IContractTemplateService
     {
-        Task<string?> GenerateContractAsync(RawContractDocument rawContract);
+        Task<string?> TransformDocumentFromLiquidTemplateAsync(RawContractDocument rawContract);
     }
 }

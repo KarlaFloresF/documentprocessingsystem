@@ -56,3 +56,17 @@ src/DocumentProcessingSystem.Domain/obj/DocumentProcessingSystem.Domain.csproj.n
 src/DocumentProcessingSystem.Domain/obj/DocumentProcessingSystem.Domain.csproj.nuget.g.targets
 src/DocumentProcessingSystem.Domain/obj/project.assets.json
 src/DocumentProcessingSystem.Functions/DocumentProcessingSystem.Functions.csproj
+src/.vs/src/v17/DocumentLayout.json
+src/DocumentProcessingSystem.Infrastructure/bin/Debug/net8.0/DocumentProcessingSystem.Infrastructure.deps.json
+src/DocumentProcessingSystem.Infrastructure/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+src/DocumentProcessingSystem.Infrastructure/obj/Debug/net8.0/DocumentProcessingSystem.Infrastructure.AssemblyInfo.cs
+src/DocumentProcessingSystem.Infrastructure/obj/Debug/net8.0/DocumentProcessingSystem.Infrastructure.csproj.FileListAbsolute.txt
+src/DocumentProcessingSystem.Infrastructure/obj/Debug/net8.0/DocumentProcessingSystem.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+src/DocumentProcessingSystem.Infrastructure/obj/Debug/net8.0/DocumentProcessingSystem.Infrastructure.GlobalUsings.g.cs
+src/DocumentProcessingSystem.Infrastructure/obj/DocumentProcessingSystem.Infrastructure.csproj.nuget.dgspec.json
+src/DocumentProcessingSystem.Infrastructure/obj/DocumentProcessingSystem.Infrastructure.csproj.nuget.g.props
+src/DocumentProcessingSystem.Infrastructure/obj/DocumentProcessingSystem.Infrastructure.csproj.nuget.g.targets
+src/DocumentProcessingSystem.Infrastructure/obj/project.assets.json
+src/DocumentProcessingSystem.Application/obj/Debug/net8.0/DocumentProcessingSystem.Application.sourcelink.json
+src/DocumentProcessingSystem.Domain/obj/Debug/net8.0/DocumentProcessingSystem.Domain.sourcelink.json
+src/DocumentProcessingSystem.Infrastructure/obj/Debug/net8.0/DocumentProcessingSystem.Infrastructure.sourcelink.json
